@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.venv/
+venv/
+env/
+build/
+dist/
+
+# Project data (large, reproducible from code).
+# Match any duckdb file anywhere under data/ and common state/model dirs.
+data/raw/
+data/cache/
+data/models/
+data/db/
+data/state/
+data/logs/
+data/trades/
+data/**/*.duckdb
+data/**/*.duckdb.wal
+*.pkl
+*.joblib
+
+# FNSPID raw download (22+ GB — never commit)
+data/fnspid/
+
+# Logs
+logs/
+*.log
+
+# Env / secrets
+.env
+.env.local
+*.secret
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/

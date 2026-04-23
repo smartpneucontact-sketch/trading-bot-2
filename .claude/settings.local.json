@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pandoc --track-changes=all \"/Users/arsenkhanguieldyan/Documents/Trading/Trading bot after 4/Trading bot 6/PROJECT_MEMORY.docx\" -o /tmp/project_memory.md)",
+      "Read(//tmp/**)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(python3 -m compileall -q bot8 tests)",
+      "Bash(uv --version)",
+      "Bash(python3 -c \"import sys; print\\(sys.executable\\); print\\(sys.version\\); print\\(\\)\")",
+      "Bash(python3 -c \"import pip; print\\('pip:', pip.__version__\\)\")",
+      "Bash(python3 -c \"import pydantic; print\\('pydantic:', pydantic.__version__\\)\")",
+      "Bash(python3 -c \"import duckdb; print\\('duckdb:', duckdb.__version__\\)\")",
+      "Bash(find \"/Users/arsenkhanguieldyan/Documents/Traiding bot 8/.venv/lib/python3.13/site-packages/\" -name \"*.pth\" -maxdepth 1 -exec echo {} \\\\; -exec cat {} \\\\;)",
+      "Bash(xattr -l _editable_impl_bot8.pth)",
+      "Bash(xattr -lr \"/Users/arsenkhanguieldyan/Documents/Traiding bot 8/.venv/lib/python3.13/site-packages/\")",
+      "Bash(./bot8.sh info *)",
+      "Bash(gh repo *)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(python3 -c \"import fastapi\")",
+      "Bash(rmdir frontend *)",
+      "Bash(npx --yes create-next-app@latest frontend --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --use-npm --no-git --turbopack)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000/ -o /tmp/frontend-response.html -w \"HTTP %{http_code}, %{size_download} bytes\\\\n\")",
+      "Read(//private/tmp/**)"
+    ]
+  }
+}
