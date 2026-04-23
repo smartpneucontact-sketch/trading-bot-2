@@ -24,10 +24,16 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Install Python deps first for layer caching.
+#
+# IMPORTANT — keep this install minimal. The API is a read-only DuckDB
+# consumer; it does NOT need alpaca-py, yfinance, or lxml at this stage.
+# The full trading extra triples the install size and has caused OOM kills
+# on Railway's standard builder. When we wire in the live execution adapter,
+# move it to its own service/image rather than bloating this one.
 COPY pyproject.toml README.md ./
 COPY bot8/ ./bot8/
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e ".[trading,web]"
+    pip install --no-cache-dir -e ".[web]"
 
 # Copy the API code last so it rebuilds cheaply.
 COPY api/ ./api/
