@@ -393,6 +393,37 @@ def features_news(
 train_app = typer.Typer(help="Model training commands.")
 app.add_typer(train_app, name="train")
 
+live_app = typer.Typer(help="Live trading commands — run-loops that submit real orders.")
+app.add_typer(live_app, name="live")
+
+
+@live_app.command("premarket")
+def live_premarket(
+    score: str = typer.Option("oof_meta_with_news", help="Which OOF meta to trade."),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Compute weights but don't submit."),
+    paper: bool = typer.Option(True, help="Paper trading (default). Use --no-paper for live."),
+    skip_news: bool = typer.Option(False, "--skip-news", help="Skip the live news fetch step."),
+) -> None:
+    """Daily pre-market run: news fetch -> score -> predict -> rebalance -> report."""
+    from bot8.runner.premarket import run_premarket
+
+    report = run_premarket(
+        score_col=score,
+        dry_run=dry_run,
+        paper=paper,
+        skip_news_fetch=skip_news,
+    )
+    typer.echo("")
+    typer.echo(f"  run_id:        {report.run_id}")
+    typer.echo(f"  market_open:   {report.market_open}")
+    typer.echo(f"  longs/shorts:  {report.n_longs}/{report.n_shorts}")
+    typer.echo(f"  submitted:     {report.n_orders_submitted}")
+    typer.echo(f"  filled:        {report.n_orders_filled}")
+    if report.errors:
+        typer.echo(f"  ERRORS ({len(report.errors)}):")
+        for err in report.errors:
+            typer.echo(f"    • {err}")
+
 
 @train_app.command("quant")
 def train_quant_cmd(
