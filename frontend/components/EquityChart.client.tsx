@@ -62,10 +62,13 @@ export default function EquityChartClient({ data }: { data: EquityPoint[] }) {
               fontSize: 12,
             }}
             labelStyle={{ color: "#a1a1aa" }}
-            formatter={(value: number, name: string) => {
-              if (name === "equity") return [value.toFixed(4), "Equity"];
-              if (name === "drawdown") return [`${value.toFixed(2)}%`, "Drawdown"];
-              return [value, name];
+            formatter={(value, name) => {
+              // Recharts types `value` as ValueType | undefined (can be string,
+              // number, or an array). Normalize to a number before formatting.
+              const n = typeof value === "number" ? value : Number(value ?? 0);
+              if (name === "equity") return [n.toFixed(4), "Equity"];
+              if (name === "drawdown") return [`${n.toFixed(2)}%`, "Drawdown"];
+              return [String(value ?? ""), String(name ?? "")];
             }}
           />
           <Area
