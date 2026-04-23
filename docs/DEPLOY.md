@@ -9,15 +9,19 @@ Railway project: bot8
 │
 ├─ Service: bot8-api           Python + DuckDB + cron jobs
 │   • Root directory: /
-│   • Dockerfile: Dockerfile.api
+│   • Dockerfile: Dockerfile  (auto-detected at root)
 │   • Volume: /app/data   (persists DB across redeploys)
 │   • Public URL: bot8-api.up.railway.app
 │
 └─ Service: bot8-frontend      Next.js 16 standalone
     • Root directory: /frontend
-    • Dockerfile: Dockerfile
+    • Dockerfile: Dockerfile  (auto-detected under /frontend)
     • Public URL: bot8-frontend.up.railway.app
 ```
+
+Each service has its own `Dockerfile` in its Root Directory — Railway
+auto-detects it. No `railway.toml` at the repo root; it would apply
+globally to every service in the project and break per-service builds.
 
 ## One-time setup
 
@@ -47,7 +51,7 @@ Copy the output — you'll paste it into both services' env vars.
 ### Step 1 — Create the project and API service
 
 1. https://railway.com/new → "Deploy from GitHub repo" → pick `bot8`.
-2. Railway auto-detects `railway.toml` at repo root → builds from `Dockerfile.api`.
+2. Railway auto-detects the root `Dockerfile` (no config file needed).
 3. Rename the service to `bot8-api` (Settings → Service Name).
 4. **Add volume(s)**:
    - **Required**: Settings → Volumes → New Volume, mount path `/app/data`. Persists the DuckDB file + models across redeploys.
@@ -74,7 +78,7 @@ Copy the output — you'll paste it into both services' env vars.
 2. Railway creates a new service.
 3. Settings → Service Name: `bot8-frontend`.
 4. Settings → **Root Directory**: `frontend`.
-5. Settings → Build: should auto-detect `frontend/railway.toml` → `frontend/Dockerfile`.
+5. Settings → Build: auto-detects `frontend/Dockerfile` (Railway looks for `Dockerfile` in the Root Directory).
 6. **Generate a public domain** (Settings → Networking → Generate Domain).
 7. **Environment variables**:
 
