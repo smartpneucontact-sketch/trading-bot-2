@@ -12,12 +12,17 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.auth import require_api_key
+from api.bootstrap import ensure_dashboard_db
 from api.routers import backtest, news, portfolio, trades
 from bot8.config.logging import setup_file_logging
 
 # Wire the loguru file sink before the app is instantiated so import-time
 # warnings hit the log. stderr keeps streaming to Railway's dashboard as well.
 setup_file_logging(service_name="api")
+
+# Download the dashboard DB from DASHBOARD_DB_URL if it's missing locally.
+# No-op if the file exists or the env var isn't set.
+ensure_dashboard_db()
 
 app = FastAPI(
     title="bot8 API",
