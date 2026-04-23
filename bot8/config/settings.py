@@ -33,6 +33,10 @@ class Settings(BaseSettings):
 
     # --- Paths ---
     data_dir: Path = Path("./data")
+    # Optional override for the logs directory — useful when mounting a
+    # separate Railway volume at e.g. `/app/logs`. When unset, logs go to
+    # `{data_dir}/logs/` (the default pattern).
+    logs_dir_override: Path | None = Field(default=None, alias="LOGS_DIR")
 
     # --- Logging ---
     log_level: str = "INFO"
@@ -88,6 +92,16 @@ class Settings(BaseSettings):
 
     @property
     def logs_dir(self) -> Path:
+        """Where to write rotating log files.
+
+        Precedence:
+          1. `LOGS_DIR` env var (for separate Railway log volume)
+          2. `{data_dir}/logs/` default
+        """
+        if self.logs_dir_override is not None:
+            p = Path(self.logs_dir_override).expanduser().resolve()
+            p.mkdir(parents=True, exist_ok=True)
+            return p
         return self.data_dir / "logs"
 
     @property

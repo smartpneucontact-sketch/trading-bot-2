@@ -33,6 +33,9 @@ COPY api/ ./api/
 # Runtime.
 ENV PYTHONUNBUFFERED=1
 ENV DATA_DIR=/app/data
+# Optional: mount a separate Railway volume at /app/logs and set LOGS_DIR
+# to split logs from the DuckDB. Falls back to /app/data/logs when unset.
+# ENV LOGS_DIR=/app/logs
 EXPOSE 8000
 
 # Railway sets $PORT; fall back to 8000 for local.

@@ -14,6 +14,11 @@ import typer
 from loguru import logger
 
 from bot8.config import get_settings
+from bot8.config.logging import setup_file_logging
+
+# Every CLI invocation writes to the "cli" log file. Useful for auditing
+# cron-driven runs on Railway (bot8 data fnspid, bot8 train quant, etc).
+setup_file_logging(service_name="cli")
 
 app = typer.Typer(
     name="bot8",

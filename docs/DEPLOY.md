@@ -49,7 +49,9 @@ Copy the output — you'll paste it into both services' env vars.
 1. https://railway.com/new → "Deploy from GitHub repo" → pick `bot8`.
 2. Railway auto-detects `railway.toml` at repo root → builds from `Dockerfile.api`.
 3. Rename the service to `bot8-api` (Settings → Service Name).
-4. **Add a volume**: Settings → Volumes → New Volume, mount path `/app/data`. This persists the DuckDB file across redeploys.
+4. **Add volume(s)**:
+   - **Required**: Settings → Volumes → New Volume, mount path `/app/data`. Persists the DuckDB file + models across redeploys.
+   - **Optional**: add a second volume at `/app/logs` if you want logs on a separate disk. Then set `LOGS_DIR=/app/logs` in env vars. Without it, logs go to `/app/data/logs/` on the same volume.
 5. **Generate a public domain**: Settings → Networking → Generate Domain.  Copy the resulting URL (e.g. `bot8-api-production.up.railway.app`).
 6. **Environment variables**:
 
@@ -61,6 +63,8 @@ Copy the output — you'll paste it into both services' env vars.
    | `DASHBOARD_API_KEY` | the generated hex string |
    | `FRONTEND_ORIGINS` | `https://<frontend-service-url>` *(fill after step 2)* |
    | `DATA_DIR` | `/app/data` |
+   | `LOGS_DIR` | `/app/logs` *(only if you added a second volume)* |
+   | `LOG_RETENTION_DAYS` | `30` *(optional; default 30)* |
 
 7. Click Deploy.
 

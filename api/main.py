@@ -13,6 +13,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.auth import require_api_key
 from api.routers import backtest, news, portfolio, trades
+from bot8.config.logging import setup_file_logging
+
+# Wire the loguru file sink before the app is instantiated so import-time
+# warnings hit the log. stderr keeps streaming to Railway's dashboard as well.
+setup_file_logging(service_name="api")
 
 app = FastAPI(
     title="bot8 API",
