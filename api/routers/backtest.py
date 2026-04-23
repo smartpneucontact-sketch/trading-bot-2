@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from api.db import api_session
+from api.routers._helpers import safe_query
 
 router = APIRouter(prefix="/api", tags=["backtest"])
 
@@ -22,6 +23,7 @@ class BacktestRow(BaseModel):
 
 
 @router.get("/backtest/compare", response_model=list[BacktestRow])
+@safe_query(default_factory=list)
 def backtest_compare() -> list[BacktestRow]:
     """All rows in backtest_summary, sorted by Sharpe descending."""
     with api_session() as con:

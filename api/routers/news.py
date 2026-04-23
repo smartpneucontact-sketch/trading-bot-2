@@ -8,6 +8,7 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
 from api.db import api_session
+from api.routers._helpers import safe_query
 
 router = APIRouter(prefix="/api", tags=["news"])
 
@@ -22,6 +23,7 @@ class ScoredHeadline(BaseModel):
 
 
 @router.get("/news/recent", response_model=list[ScoredHeadline])
+@safe_query(default_factory=list)
 def recent_news(
     limit: int = Query(50, ge=1, le=500),
     symbol: str | None = Query(None, description="Filter to one ticker."),

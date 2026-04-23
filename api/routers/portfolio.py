@@ -16,6 +16,7 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
 from api.db import api_session
+from api.routers._helpers import safe_query
 
 router = APIRouter(prefix="/api", tags=["portfolio"])
 
@@ -64,7 +65,16 @@ class MetricsSummary(BaseModel):
 # ---------------------------------------------------------------------------
 
 
+def _empty_portfolio() -> PortfolioSnapshot:
+    from datetime import date
+    return PortfolioSnapshot(
+        as_of_date=date.today(), n_longs=0, n_shorts=0,
+        gross_exposure=0.0, net_exposure=0.0, positions=[],
+    )
+
+
 @router.get("/portfolio", response_model=PortfolioSnapshot)
+@safe_query(default_factory=_empty_portfolio)
 def current_portfolio(
     score_col: str = Query(
         "oof_meta_with_news",
@@ -127,6 +137,7 @@ def current_portfolio(
 
 
 @router.get("/equity-curve", response_model=list[EquityPoint])
+@safe_query(default_factory=list)
 def equity_curve(
     score_col: str = Query("oof_meta_with_news"),
     days: int = Query(365, ge=1, le=5000),
@@ -155,7 +166,15 @@ def equity_curve(
     ]
 
 
+def _empty_metrics() -> MetricsSummary:
+    return MetricsSummary(
+        annual_return=0, annual_vol=0, sharpe=0, max_drawdown=0,
+        hit_rate=0, avg_turnover=0, n_days=0, score_col="unknown",
+    )
+
+
 @router.get("/metrics", response_model=MetricsSummary)
+@safe_query(default_factory=_empty_metrics)
 def metrics(
     score_col: str = Query("oof_meta_with_news"),
 ) -> MetricsSummary:

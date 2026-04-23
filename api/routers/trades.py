@@ -14,6 +14,7 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
 from api.db import api_session
+from api.routers._helpers import safe_query
 
 router = APIRouter(prefix="/api", tags=["trades"])
 
@@ -28,6 +29,7 @@ class Trade(BaseModel):
 
 
 @router.get("/trades", response_model=list[Trade])
+@safe_query(default_factory=list)
 def recent_trades(
     score_col: str = Query("oof_meta_with_news"),
     limit: int = Query(50, ge=1, le=500),
